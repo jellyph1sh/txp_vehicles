@@ -25,6 +25,11 @@ local function loadModel(model)
     return hash
 end
 
+local function repairVehicle(veh)
+    SetVehicleFixed(veh)
+    SetVehicleEngineHealth(veh, 1000.0)
+end
+
 local function spawnVehicle(hash)
     local player = GetPlayerPed(-1)
     local x, y, z = table.unpack(GetEntityCoords(player))
@@ -70,5 +75,21 @@ AddEventHandler("txp_vehicles:deletevehicle", function()
     end
 end)
 
-TriggerEvent("chat:addSuggestion", "/veh", "Vehicle spawn command.", {{ name="<model>", help="vehicle model"}})
+RegisterNetEvent("txp_vehicles:repairvehicle")
+AddEventHandler("txp_vehicles:repairvehicle", function()
+    local player = GetPlayerPed(-1)
+    if not isPlayerInVehicle(player) then
+        TriggerEvent("chat:addMessage", {
+            color = {255, 0, 0},
+            multiline = false,
+            args = {"[ERROR]", "You are not in a vehicle!"}
+        })
+    else
+        local veh = GetVehiclePedIsIn(player, false)
+        repairVehicle(veh)
+    end
+end)
+
 TriggerEvent("chat:addSuggestion", "/delveh", "Delete vehicle command.", nil)
+TriggerEvent("chat:addSuggestion", "/repair", "Repair vehicle command.", nil)
+TriggerEvent("chat:addSuggestion", "/veh", "Vehicle spawn command.", {{ name="<model>", help="vehicle model"}})

@@ -8,6 +8,14 @@ local function sendChatMessage(src, prefix, msg, choosenColor)
     })
 end
 
+RegisterCommand("delveh", function(src)
+    TriggerClientEvent("txp_vehicles:deletevehicle", src)
+end, true)
+
+RegisterCommand("repair", function(src)
+    TriggerClientEvent("txp_vehicles:repairvehicle", src)
+end, true)
+
 RegisterCommand("veh", function(src, args)
     if #args == 0 then
         sendChatMessage(src, "[ERROR]", "Missing arguments", {255, 0, 0})
@@ -16,8 +24,4 @@ RegisterCommand("veh", function(src, args)
     else
         TriggerClientEvent("txp_vehicles:appearvehicle", src, args[1])
     end
-end, true)
-
-RegisterCommand("delveh", function(src)
-    TriggerClientEvent("txp_vehicles:deletevehicle", src)
 end, true)
