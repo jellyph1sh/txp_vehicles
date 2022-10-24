@@ -17,4 +17,8 @@ Basic commands to manage vehicles.
 - ***NEW** Delete vehicle command.*
 - ***NEW** If the player is in a vehicle and spawns a new vehicle, the old one is deleted.*
 - ***NEW** Help suggestions under commands.*
+
+### **2.0 :**
+- ***NEW** Repair vehicle command.*
+- ***NEW** Wash vehicle command.*
 - ***OPTIMIZED SCRIPT***
