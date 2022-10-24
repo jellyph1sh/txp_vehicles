@@ -46,6 +46,10 @@ local function spawnVehicle(hash)
     return veh
 end
 
+local function washVehicle(veh)
+    SetVehicleDirtLevel(veh, 0.0)
+end
+
 RegisterNetEvent("txp_vehicles:appearvehicle")
 AddEventHandler("txp_vehicles:appearvehicle", function(model)
     hash = loadModel(model)
@@ -90,6 +94,22 @@ AddEventHandler("txp_vehicles:repairvehicle", function()
     end
 end)
 
+RegisterNetEvent("txp_vehicles:repairvehicle")
+AddEventHandler("txp_vehicles:repairvehicle", function()
+    local player = GetPlayerPed(-1)
+    if not isPlayerInVehicle(player) then
+        TriggerEvent("chat:addMessage", {
+            color = {255, 0, 0},
+            multiline = false,
+            args = {"[ERROR]", "You are not in a vehicle!"}
+        })
+    else
+        local veh = GetVehiclePedIsIn(player, false)
+        washVehicle(veh)
+    end
+end)
+
 TriggerEvent("chat:addSuggestion", "/delveh", "Delete vehicle command.", nil)
 TriggerEvent("chat:addSuggestion", "/repair", "Repair vehicle command.", nil)
 TriggerEvent("chat:addSuggestion", "/veh", "Vehicle spawn command.", {{ name="<model>", help="vehicle model"}})
+TriggerEvent("chat:addSuggestion", "/wash", "Wash vehicle command.", nil)

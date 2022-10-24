@@ -25,3 +25,7 @@ RegisterCommand("veh", function(src, args)
         TriggerClientEvent("txp_vehicles:appearvehicle", src, args[1])
     end
 end, true)
+
+RegisterCommand("wash", function(src)
+    TriggerClientEvent("txp_vehicles:washvehicle", src)
+end, true)
