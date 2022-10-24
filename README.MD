@@ -9,16 +9,19 @@ Basic commands to manage vehicles.
 ## **HOW TO USE :**
 - *Command `/veh <model>` to appear in the vehicle of your choice.*
 - *Command `/delveh` to delete vehicle you are in.*
+- *Command `/repair` to repair vehicle you are in.*
+- *Command `/wash` to wash vehicle you are in.*
 
 ## **CHANGELOG :**
 
 ### **1.0 :**
-- ***NEW** Vehicle spawn command.*
-- ***NEW** Delete vehicle command.*
-- ***NEW** If the player is in a vehicle and spawns a new vehicle, the old one is deleted.*
-- ***NEW** Help suggestions under commands.*
+- * Vehicle spawn command.*
+- * Delete vehicle command.*
+- * If the player is in a vehicle and spawns a new vehicle, the old one is deleted.*
+- *Help suggestions under commands.*
 
-### **2.0 :**
+### **1.1 :**
 - ***NEW** Repair vehicle command.*
 - ***NEW** Wash vehicle command.*
+- ***PATH** Networking of repair and washing.*
 - ***OPTIMIZED SCRIPT***
