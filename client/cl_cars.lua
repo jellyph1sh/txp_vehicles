@@ -1,17 +1,3 @@
-local function deleteVehicle(veh)
-    local delVeh = DeleteEntity(veh)
-    SetEntityAsNoLongerNeeded(delVeh)
-    return delVeh
-end
-
-local function isPlayerInVehicle(player)
-    local veh = GetVehiclePedIsIn(player, false)
-    if IsPedInVehicle(player, veh, false) then
-        return true
-    end
-    return false
-end
-
 local function loadModel(model)
     local hash = GetHashKey(model)
     if not IsModelInCdimage(hash) then
@@ -34,9 +20,18 @@ local function spawnVehicle(hash)
     local player = GetPlayerPed(-1)
     local x, y, z = table.unpack(GetEntityCoords(player))
     local w = GetEntityHeading(player)
-    if isPlayerInVehicle(player) then
-        local veh = GetVehiclePedIsIn(player, false)
-        deleteVehicle(veh)
+    local currentVeh = GetVehiclePedIsIn(player, false)
+    if currentVeh ~= 0 then
+        vehNetId = NetworkGetNetworkIdFromEntity(currentVeh)
+        if NetworkDoesNetworkIdExist(vehNetId) then
+            TriggerServerEvent("txp_vehicles:deletevehicle", vehNetId)
+        else
+            TriggerEvent("chat:addMessage", {
+                color = {255, 0, 0},
+                multiline = false,
+                args = {"[ERROR]", "Invalid network id!"}
+            })
+        end
     end
     local veh = CreateVehicle(hash, x, y, z, w, true, true)
     SetEntityAsMissionEntity(veh, true, true)
@@ -53,7 +48,7 @@ end
 RegisterNetEvent("txp_vehicles:appearvehicle")
 AddEventHandler("txp_vehicles:appearvehicle", function(model)
     hash = loadModel(model)
-    if not hash then
+    if hash == 0 then
         TriggerEvent("chat:addMessage", {
             color = {255, 0, 0},
             multiline = false,
@@ -64,52 +59,19 @@ AddEventHandler("txp_vehicles:appearvehicle", function(model)
     end
 end)
 
-RegisterNetEvent("txp_vehicles:deletevehicle")
-AddEventHandler("txp_vehicles:deletevehicle", function()
-    local player = GetPlayerPed(-1)
-    if not isPlayerInVehicle(player) then
-        TriggerEvent("chat:addMessage", {
-            color = {255, 0, 0},
-            multiline = false,
-            args = {"[ERROR]", "You are not in a vehicle!"}
-        })
-    else
-        local veh = GetVehiclePedIsIn(player, false)
-        deleteVehicle(veh)
-    end
+RegisterNetEvent("txp_vehicles:repairvehicle")
+AddEventHandler("txp_vehicles:repairvehicle", function(svVeh)
+    veh = NetworkGetEntityFromNetworkId(svVeh)
+    repairVehicle(veh)
 end)
 
-RegisterNetEvent("txp_vehicles:repairvehicle")
-AddEventHandler("txp_vehicles:repairvehicle", function()
-    local player = GetPlayerPed(-1)
-    if not isPlayerInVehicle(player) then
-        TriggerEvent("chat:addMessage", {
-            color = {255, 0, 0},
-            multiline = false,
-            args = {"[ERROR]", "You are not in a vehicle!"}
-        })
-    else
-        local veh = GetVehiclePedIsIn(player, false)
-        repairVehicle(veh)
-    end
-end)
-
-RegisterNetEvent("txp_vehicles:repairvehicle")
-AddEventHandler("txp_vehicles:repairvehicle", function()
-    local player = GetPlayerPed(-1)
-    if not isPlayerInVehicle(player) then
-        TriggerEvent("chat:addMessage", {
-            color = {255, 0, 0},
-            multiline = false,
-            args = {"[ERROR]", "You are not in a vehicle!"}
-        })
-    else
-        local veh = GetVehiclePedIsIn(player, false)
-        washVehicle(veh)
-    end
+RegisterNetEvent("txp_vehicles:washvehicle")
+AddEventHandler("txp_vehicles:washvehicle", function(svVeh)
+    veh = NetworkGetEntityFromNetworkId(svVeh)
+    washVehicle(veh)
 end)
 
 TriggerEvent("chat:addSuggestion", "/delveh", "Delete vehicle command.", nil)
 TriggerEvent("chat:addSuggestion", "/repair", "Repair vehicle command.", nil)
-TriggerEvent("chat:addSuggestion", "/veh", "Vehicle spawn command.", {{ name="<model>", help="vehicle model"}})
+TriggerEvent("chat:addSuggestion", "/veh", "Vehicle spawn command.", {{ name="model", help="vehicle model"}})
 TriggerEvent("chat:addSuggestion", "/wash", "Wash vehicle command.", nil)
