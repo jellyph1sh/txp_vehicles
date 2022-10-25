@@ -25,6 +25,9 @@ local function spawnVehicle(hash)
         vehNetId = NetworkGetNetworkIdFromEntity(currentVeh)
         if NetworkDoesNetworkIdExist(vehNetId) then
             TriggerServerEvent("txp_vehicles:deletevehicle", vehNetId)
+            while GetVehiclePedIsIn(player, false) == currentVeh do
+                Wait(5)
+            end
         else
             TriggerEvent("chat:addMessage", {
                 color = {255, 0, 0},
